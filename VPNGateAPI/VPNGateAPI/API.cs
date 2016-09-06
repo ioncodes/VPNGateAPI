@@ -11,8 +11,7 @@ namespace VPNGateAPI
     {
         public static List<VPN> GetConfigs()
         {
-            WebClient client = new WebClient();
-            client.Encoding = Encoding.UTF8;
+            WebClient client = new WebClient {Encoding = Encoding.UTF8};
             File.WriteAllText("data.csv", client.DownloadString("http://www.vpngate.net/api/iphone/").Replace("*vpn_servers", ""));
 
             List<VPN> vpns = new List<VPN>();
@@ -23,7 +22,15 @@ namespace VPNGateAPI
                 {
                     while (csv.ReadNextRecord())
                     {
-                        vpns.Add(new VPN { Config = Helpers.Decode(csv[14]), Location = csv[5], Ping = Convert.ToInt32(csv[4]) });
+                        string config = Helpers.Decode(csv[14]);
+                        vpns.Add(new VPN
+                        {
+                            Config = config,
+                            Location = csv[5],
+                            Ping = Convert.ToInt32(csv[4]),
+                            Port = Helpers.GetPort(config),
+                            Protocol = Helpers.GetProtocol(config)
+                        });
                     }
                 }
                 catch

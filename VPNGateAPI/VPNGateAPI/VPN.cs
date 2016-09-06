@@ -11,5 +11,7 @@ namespace VPNGateAPI
         public string Config { get; set; }
         public string Location { get; set; }
         public int Ping { get; set; }
+        public string Protocol { get; set; }
+        public int Port { get; set; }
     }
 }
